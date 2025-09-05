@@ -23,8 +23,8 @@ jobs:
 
       - name: Configure API keys
         run: |
-          sed -i 's/public static int APP_ID = 0; \/\/ PLEASE FILL IN YOUR OWN APP ID/public static int APP_ID = ${{ secrets.API_ID }};/' TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
-          sed -i 's/public static String APP_HASH = "YOUR_APP_HASH"; \/\/ PLEASE FILL IN YOUR OWN APP HASH/public static String APP_HASH = "${{ secrets.API_HASH }}";/' TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
+          sed -i 's/public static int APP_ID = 0; \/\/ Will be replaced by CI/public static int APP_ID = ${{ secrets.API_ID }};/' TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
+          sed -i 's/public static String APP_HASH = ""; \/\/ Will be replaced by CI/public static String APP_HASH = "${{ secrets.API_HASH }}";/' TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
 
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
