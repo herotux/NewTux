@@ -973,7 +973,7 @@ public class TranslateAlert2 extends BottomSheet implements NotificationCenter.N
             textView.setTextIsSelectable(!noforwards);
         }
         if (noforwards) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
             AndroidUtilities.logFlagSecure();
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
