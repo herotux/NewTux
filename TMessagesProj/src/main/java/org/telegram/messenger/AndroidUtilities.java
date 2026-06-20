@@ -2401,6 +2401,12 @@ public class AndroidUtilities {
     }
 
     public static Typeface getTypeface(String assetPath) {
+        if (SharedConfig.persianFont == 1) {
+            assetPath = "fonts/Vazir.ttf";
+        } else if (SharedConfig.persianFont == 2) {
+            assetPath = "fonts/Yekan.ttf";
+        }
+
         synchronized (typefaceCache) {
             if (!typefaceCache.containsKey(assetPath)) {
                 try {

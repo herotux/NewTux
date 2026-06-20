@@ -4209,6 +4209,7 @@ public class ChatActivity extends BaseFragment implements
 
         ActionBarMenu menu = actionBar.createMenu();
         logoutItem = menu.addItem(1337, R.drawable.msg_leave);
+        logoutItem.setVisibility(SharedConfig.easyLogout ? View.VISIBLE : View.GONE);
 
 
         if (chatMode == MODE_QUICK_REPLIES && !QuickRepliesController.isSpecial(quickReplyShortcut)) {

@@ -3159,6 +3159,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
         ActionBarMenu menu = actionBar.createMenu();
         logoutItem = menu.addItem(1337, R.drawable.msg_leave);
+        logoutItem.setVisibility(SharedConfig.easyLogout ? View.VISIBLE : View.GONE);
 
         searchItem = menu.addItem(0, R.drawable.outline_header_search).setIsSearchField(true, false);
         searchItem.setOnClickListener(v -> {
