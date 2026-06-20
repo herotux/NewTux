@@ -694,6 +694,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         items.add(SettingCell.Factory.of(7, IconBackgroundColors.BLUE_ALT.top, IconBackgroundColors.BLUE_ALT.bottom, R.drawable.settings_folders, getString(R.string.SettingsFolders), getString(R.string.SettingsFoldersInfo)));
         items.add(SettingCell.Factory.of(8, IconBackgroundColors.CYAN.top, IconBackgroundColors.CYAN.bottom, R.drawable.settings_devices, getString(R.string.SettingsDevices), getString(R.string.SettingsDevicesInfo)));
         items.add(SettingCell.Factory.of(9, IconBackgroundColors.ORANGE_DEEP.top, IconBackgroundColors.ORANGE_DEEP.bottom, R.drawable.settings_power, getString(R.string.SettingsPowerSaving), getString(R.string.SettingsPowerSavingInfo)));
+                items.add(SettingCell.Factory.of(100, IconBackgroundColors.BLUE.top, IconBackgroundColors.BLUE.bottom, R.drawable.settings_account, "TeleTux Settings", "Quick Logout, Screenshots, Calendar, Fonts"));
         items.add(SettingCell.Factory.of(10, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.settings_language, getString(R.string.SettingsLanguage), LocaleController.getCurrentLanguageName()));
 
         items.add(UItem.asShadow(null));
@@ -830,6 +831,10 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 break;
             case 9:
                 presentSettingFragment(new LiteModeSettingsActivity());
+                break;
+
+            case 100:
+                presentSettingFragment(new TeleTuxSettingsActivity());
                 break;
             case 10:
                 presentSettingFragment(new LanguageSelectActivity());

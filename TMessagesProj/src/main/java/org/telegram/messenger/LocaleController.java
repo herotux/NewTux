@@ -2163,6 +2163,10 @@ public class LocaleController {
     }
 
     public static String formatDateChat(long date, boolean checkYear) {
+        if (SharedConfig.persianCalendar) {
+            return JalaliCalendar.getJalaliDate(date);
+        }
+
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
@@ -2205,6 +2209,10 @@ public class LocaleController {
         return formatDate(date, false);
     }
     public static String formatDate(long date, boolean withToday) {
+        if (SharedConfig.persianCalendar) {
+            return JalaliCalendar.getJalaliDate(date);
+        }
+
         try {
             date *= 1000;
             Calendar rightNow = Calendar.getInstance();

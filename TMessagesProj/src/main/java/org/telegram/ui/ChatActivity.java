@@ -430,6 +430,7 @@ public class ChatActivity extends BaseFragment implements
     private ActionBarMenuItem headerItem;
     private ActionBarMenu.LazyItem editTextItem;
     protected ActionBarMenuItem searchItem;
+    private ActionBarMenuItem logoutItem;
     protected ActionBarMenuItem topicCreateItem;
     private ActionBarMenuItem.Item translateItem;
     private ActionBarMenuItem searchIconItem;
@@ -3674,6 +3675,10 @@ public class ChatActivity extends BaseFragment implements
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(final int id) {
+                if (id == 1337) {
+                    MessagesController.getInstance(currentAccount).performLogout(1);
+                    return;
+                }
                 if (id == -1) {
                     if (isInPollAddOptionMode()) {
                         pollAddOptionModeClose();
@@ -4203,6 +4208,9 @@ public class ChatActivity extends BaseFragment implements
         });
 
         ActionBarMenu menu = actionBar.createMenu();
+        logoutItem = menu.addItem(1337, R.drawable.msg_leave);
+        logoutItem.setVisibility(SharedConfig.easyLogout ? View.VISIBLE : View.GONE);
+
 
         if (chatMode == MODE_QUICK_REPLIES && !QuickRepliesController.isSpecial(quickReplyShortcut)) {
             menu.addItem(edit_quick_reply, R.drawable.group_edit).setContentDescription(LocaleController.getString(R.string.Edit));
