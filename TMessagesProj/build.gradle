@@ -110,6 +110,9 @@ android {
 
 
     defaultConfig {
+        buildConfigField "int", "APP_ID", getEnv("TELEGRAM_APP_ID", "4")
+        buildConfigField "String", "APP_HASH", "\"" + getEnv("TELEGRAM_APP_HASH", "014b35b6184100b085b0d0572f9b5103") + "\""
+
         minSdkVersion 21
         targetSdkVersion 35
 
@@ -228,6 +231,15 @@ android {
     namespace 'org.telegram.messenger'
 }
 
+
+
+def getEnv(String name, String defaultValue) {
+    def value = System.getenv(name)
+    if (value == null || value.isEmpty()) {
+        return defaultValue
+    }
+    return value
+}
 
 def getProps(String propName) {
     def propsFile = rootProject.file('local.properties')

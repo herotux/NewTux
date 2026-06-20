@@ -29,6 +29,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Debug APK
+        env:
+          TELEGRAM_APP_ID: ${{ secrets.TELEGRAM_APP_ID }}
+          TELEGRAM_APP_HASH: ${{ secrets.TELEGRAM_APP_HASH }}
         run: ./gradlew :TMessagesProj_App:assembleAfatDebug --stacktrace
 
       - name: Upload APK
