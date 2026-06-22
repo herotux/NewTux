@@ -592,6 +592,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private final static int set_username = 43;
     private final static int bot_privacy = 44;
     private final static int delete_group = 45;
+    private final static int jaroo_barghi = 50;
     private final static int enable_no_forwards = 46;
     private final static int disable_no_forwards = 47;
 
@@ -2537,6 +2538,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         return;
                     }
                     finishFragment();
+                } else if (id == jaroo_barghi) {
+                    openJarooBarghiDialog();
                 } else if (id == block_contact) {
                     onBlockContactClicked(false);
                 } else if (id == add_contact) {
@@ -4831,12 +4834,15 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                         capacitySum += capacity;
                                         capacityCount++;
                                     }
-                                    cpusInfo.append("\n");
+                                    cpusInfo.append("
+");
                                 }
                                 StringBuilder info = new StringBuilder();
-                                info.append(Build.MANUFACTURER).append(", ").append(Build.MODEL).append(" (").append(Build.PRODUCT).append(", ").append(Build.DEVICE).append(") ").append(" (android ").append(Build.VERSION.SDK_INT).append(")\n");
+                                info.append(Build.MANUFACTURER).append(", ").append(Build.MODEL).append(" (").append(Build.PRODUCT).append(", ").append(Build.DEVICE).append(") ").append(" (android ").append(Build.VERSION.SDK_INT).append(")
+");
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                    info.append("SoC: ").append(Build.SOC_MANUFACTURER).append(", ").append(Build.SOC_MODEL).append("\n");
+                                    info.append("SoC: ").append(Build.SOC_MANUFACTURER).append(", ").append(Build.SOC_MODEL).append("
+");
                                 }
                                 String gpuModel = AndroidUtilities.getSysInfoString("/sys/kernel/gpu/gpu_model");
                                 if (gpuModel != null) {
@@ -4853,10 +4859,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                     if (maxClock != null) {
                                         info.append(", max=").append(maxClock / 1000L);
                                     }
-                                    info.append("\n");
+                                    info.append("
+");
                                 }
                                 ConfigurationInfo configurationInfo = ((ActivityManager) ApplicationLoader.applicationContext.getSystemService(Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo();
-                                info.append("GLES Version: ").append(configurationInfo.getGlEsVersion()).append("\n");
+                                info.append("GLES Version: ").append(configurationInfo.getGlEsVersion()).append("
+");
                                 info.append("Memory: class=").append(AndroidUtilities.formatFileSize(memoryClass * 1024L * 1024L));
                                 ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
                                 ((ActivityManager) ApplicationLoader.applicationContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryInfo(memoryInfo);
@@ -4864,12 +4872,14 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 info.append(", avail=").append(AndroidUtilities.formatFileSize(memoryInfo.availMem));
                                 info.append(", low?=").append(memoryInfo.lowMemory);
                                 info.append(" (threshold=").append(AndroidUtilities.formatFileSize(memoryInfo.threshold)).append(")");
-                                info.append("\n");
+                                info.append("
+");
                                 info.append("Current class: ").append(SharedConfig.performanceClassName(SharedConfig.getDevicePerformanceClass())).append(", measured: ").append(SharedConfig.performanceClassName(SharedConfig.measureDevicePerformanceClass()));
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                     info.append(", suggest=").append(Build.VERSION.MEDIA_PERFORMANCE_CLASS);
                                 }
-                                info.append("\n");
+                                info.append("
+");
                                 info.append(cpuCount).append(" CPUs");
                                 if (minFreqCount > 0) {
                                     info.append(", avgMinFreq=").append(minFreqSum / minFreqCount);
@@ -4883,7 +4893,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 if (capacityCount > 0) {
                                     info.append(", avgCapacity=").append(capacitySum / capacityCount);
                                 }
-                                info.append("\n").append(cpusInfo);
+                                info.append("
+").append(cpusInfo);
 
                                 listCodecs("video/avc", info);
                                 listCodecs("video/hevc", info);
@@ -6158,7 +6169,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
                 if (chatInfo != null && !TextUtils.isEmpty(chatInfo.about)) {
-                    text = String.format("%s\nhttps://" + getMessagesController().linkPrefix + "/%s", chatInfo.about, ChatObject.getPublicUsername(chat));
+                    text = String.format("%s
+https://" + getMessagesController().linkPrefix + "/%s", chatInfo.about, ChatObject.getPublicUsername(chat));
                 } else {
                     text = String.format("https://" + getMessagesController().linkPrefix + "/%s", ChatObject.getPublicUsername(chat));
                 }
@@ -8995,7 +9007,80 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
     @SuppressWarnings("unchecked")
     @Override
-    public void didReceivedNotification(int id, int account, final Object... args) {
+
+    private void openJarooBarghiDialog() {
+        if (getParentActivity() == null) return;
+
+        final boolean[] selectedTypes = new boolean[9]; // MEDIA_PHOTOVIDEO to MEDIA_VIDEOS_ONLY
+        String[] typeNames = {"Photos/Videos", "Files", "Audio", "Links", "Music", "GIFs", "Photos Only", "Videos Only"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+        builder.setTitle("Jaroo Barghi - Media Types");
+        builder.setMultiChoiceItems(typeNames, selectedTypes, (dialog, which, isChecked) -> {
+            selectedTypes[which] = isChecked;
+        });
+
+        builder.setPositiveButton("Next", (dialog, which) -> {
+            ArrayList<Integer> types = new ArrayList<>();
+            for (int i = 0; i < selectedTypes.length; i++) {
+                if (selectedTypes[i]) types.add(i);
+            }
+            if (types.isEmpty()) return;
+
+            showUserSelectionDialog(types);
+        });
+        builder.setNegativeButton("Cancel", null);
+        showDialog(builder.create());
+    }
+
+    private void showUserSelectionDialog(ArrayList<Integer> types) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+        builder.setTitle("Jaroo Barghi - User Filter");
+        String[] options = {"All Users", "Include Specific Users", "Exclude Specific Users"};
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                startJarooBarghiService(types, null, null);
+            } else {
+                Bundle args = new Bundle();
+                args.putInt("type", UsersSelectActivity.TYPE_PRIVATE);
+                UsersSelectActivity fragment = new UsersSelectActivity(args);
+                fragment.setDelegate(new UsersSelectActivity.FilterUsersActivityDelegate() {
+                    @Override
+                    public void didSelectChats(ArrayList<Long> ids, int flags) {
+                        long[] userIds = new long[ids.size()];
+                        for (int i = 0; i < ids.size(); i++) userIds[i] = ids.get(i);
+
+                        if (which == 1) {
+                            startJarooBarghiService(types, userIds, null);
+                        } else {
+                            startJarooBarghiService(types, null, userIds);
+                        }
+                    }
+                });
+                presentFragment(fragment);
+            }
+        });
+        showDialog(builder.create());
+    }
+
+    private void startJarooBarghiService(ArrayList<Integer> types, long[] include, long[] exclude) {
+        Intent intent = new Intent(getParentActivity(), org.telegram.messenger.JarooBarghiService.class);
+        intent.putExtra("account", currentAccount);
+        intent.putExtra("dialogId", getDialogId());
+        int[] typesArray = new int[types.size()];
+        for (int i = 0; i < types.size(); i++) typesArray[i] = types.get(i);
+        intent.putExtra("types", typesArray);
+        if (include != null) intent.putExtra("includeUsers", include);
+        if (exclude != null) intent.putExtra("excludeUsers", exclude);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            getParentActivity().startForegroundService(intent);
+        } else {
+            getParentActivity().startService(intent);
+        }
+    }
+
+public void didReceivedNotification(int id, int account, final Object... args) {
         if (id == NotificationCenter.uploadStoryEnd || id == NotificationCenter.chatWasBoostedByUser) {
             checkCanSendStoryForPosting();
         } else if (id == NotificationCenter.updateInterfaces) {
@@ -11954,6 +12039,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         }
         Context context = actionBar.getContext();
         otherItem.removeAllSubItems();
+        otherItem.addSubItem(jaroo_barghi, R.drawable.msg_download, "Jaroo Barghi");
         animatingItem = null;
 
         editItemVisible = false;
@@ -13526,8 +13612,16 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         aboutLinkCell.setTextAndValue(userInfo.about, LocaleController.getString(R.string.UserBio), addlinks);
                     } else if (position == channelInfoRow) {
                         String text = chatInfo.about;
-                        while (text.contains("\n\n\n")) {
-                            text = text.replace("\n\n\n", "\n\n");
+                        while (text.contains("
+
+
+")) {
+                            text = text.replace("
+
+
+", "
+
+");
                         }
                         aboutLinkCell.setTextAndValue(text, LocaleController.getString(R.string.DescriptionPlaceholder), ChatObject.isChannel(currentChat) && !currentChat.megagroup);
                     } else if (position == bioRow) {
@@ -13847,7 +13941,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                     Browser.openUrl(getContext(), getString(botOwner ? R.string.ProfileBotOpenAppInfoOwnerLink : R.string.ProfileBotOpenAppInfoLink));
                                 }));
                                 if (bot_verification != null || bot_manager_id != null) {
-                                    sb.append("\n\n\n");
+                                    sb.append("
+
+
+");
                                 }
                             }
                             if (bot_verification != null) {
@@ -15818,10 +15915,13 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             if (decoderIndexes.isEmpty() && encoderIndexes.isEmpty()) {
                 return;
             }
-            info.append("\n").append(decoderIndexes.size()).append("+").append(encoderIndexes.size()).append(" ").append(type.substring(6)).append(" codecs:\n");
+            info.append("
+").append(decoderIndexes.size()).append("+").append(encoderIndexes.size()).append(" ").append(type.substring(6)).append(" codecs:
+");
             for (int a = 0; a < decoderIndexes.size(); ++a) {
                 if (a > 0) {
-                    info.append("\n");
+                    info.append("
+");
                 }
                 MediaCodecInfo codec = MediaCodecList.getCodecInfoAt(decoderIndexes.get(a));
                 info.append("{d} ").append(codec.getName()).append(" (");
@@ -15841,7 +15941,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             }
             for (int a = 0; a < encoderIndexes.size(); ++a) {
                 if (a > 0 || !decoderIndexes.isEmpty()) {
-                    info.append("\n");
+                    info.append("
+");
                 }
                 MediaCodecInfo codec = MediaCodecList.getCodecInfoAt(encoderIndexes.get(a));
                 info.append("{e} ").append(codec.getName()).append(" (");
@@ -15859,7 +15960,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 MediaCodecInfo.CodecCapabilities capabilities = codec.getCapabilitiesForType(type);
                 info.append("; mi=").append(capabilities.getMaxSupportedInstances()).append(")");
             }
-            info.append("\n");
+            info.append("
+");
         } catch (Exception ignore) {
         }
     }
@@ -16209,7 +16311,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 presentFragment(new OpeningHoursActivity());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.ProfileHoursRemove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
                 builder.setTitle(LocaleController.getString(R.string.BusinessHoursClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.BusinessHoursClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16237,7 +16339,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 presentFragment(new org.telegram.ui.Business.LocationActivity());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.ProfileLocationRemove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
                 builder.setTitle(LocaleController.getString(R.string.BusinessLocationClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.BusinessLocationClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16324,7 +16426,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }, false, false, getResourceProvider()).create());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.Remove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
                 builder.setTitle(LocaleController.getString(R.string.BirthdayClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.BirthdayClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16358,7 +16460,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 presentFragment(new UserInfoActivity());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.Remove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
                 builder.setTitle(LocaleController.getString(R.string.ProfileChannelClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.ProfileChannelClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16600,7 +16702,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             } else {
                 sb = new SpannableStringBuilder();
                 sb.append(TextUtils.concat(
-                    formatPluralStringComma("StarRatingFuture", days), "\n",
+                    formatPluralStringComma("StarRatingFuture", days), "
+",
                     formatPluralStringComma("StarRatingFuturePendingPoints", (int) points)
                 ));
                 sb.append(" ");
@@ -16617,7 +16720,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
             sb = new SpannableStringBuilder();
             sb.append(TextUtils.concat(
-                formatPluralStringComma("StarRatingFuturePreview1", days), "\n",
+                formatPluralStringComma("StarRatingFuturePreview1", days), "
+",
                 formatPluralStringComma("StarRatingFuturePreview2", (int) points)
             ));
             sb.append(" ");

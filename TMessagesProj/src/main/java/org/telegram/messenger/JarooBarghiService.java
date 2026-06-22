@@ -11,7 +11,14 @@ import android.os.Build;
 import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import org.telegram.tgnet.TLRPC;
+import org.telegram.messenger.ImageLocation;
+import org.telegram.messenger.FileLoader;
+import org.telegram.messenger.MediaDataController;
+import org.telegram.messenger.MessageObject;
+import org.telegram.messenger.NotificationCenter;
+import org.telegram.messenger.AndroidUtilities;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class JarooBarghiService extends Service implements NotificationCenter.NotificationCenterDelegate {
 
@@ -24,6 +31,12 @@ public class JarooBarghiService extends Service implements NotificationCenter.No
     private int downloadedFiles = 0;
     private int lastMaxId = 0;
     private boolean hasMore = true;
+
+    private ArrayList<Integer> mediaTypes = new ArrayList<>();
+    private int currentTypeIndex = 0;
+
+    private HashSet<Long> includeUsers = new HashSet<>();
+    private HashSet<Long> excludeUsers = new HashSet<>();
 
     @Override
     public void onCreate() {
@@ -43,10 +56,30 @@ public class JarooBarghiService extends Service implements NotificationCenter.No
             currentAccount = intent.getIntExtra("account", 0);
             dialogId = intent.getLongExtra("dialogId", 0);
 
+            int[] types = intent.getIntArrayExtra("types");
+            mediaTypes.clear();
+            if (types != null) {
+                for (int t : types) mediaTypes.add(t);
+            } else {
+                mediaTypes.add(0); // Default to photo/video
+            }
+
+            long[] include = intent.getLongArrayExtra("includeUsers");
+            includeUsers.clear();
+            if (include != null) {
+                for (long id : include) includeUsers.add(id);
+            }
+
+            long[] exclude = intent.getLongArrayExtra("excludeUsers");
+            excludeUsers.clear();
+            if (exclude != null) {
+                for (long id : exclude) excludeUsers.add(id);
+            }
+
             if (!isRunning) {
                 isRunning = true;
                 NotificationCenter.getInstance(currentAccount).addObserver(this, NotificationCenter.mediaDidLoad);
-                startForeground(NOTIFICATION_ID, buildNotification("Searching for media..."));
+                startForeground(NOTIFICATION_ID, buildNotification("Jaroo Barghi started..."));
                 loadNextBatch();
             }
         }
@@ -54,12 +87,21 @@ public class JarooBarghiService extends Service implements NotificationCenter.No
     }
 
     private void loadNextBatch() {
-        if (!hasMore || !isRunning) {
-            stopSelf();
-            return;
+        if (!isRunning) return;
+
+        if (!hasMore) {
+            currentTypeIndex++;
+            if (currentTypeIndex >= mediaTypes.size()) {
+                updateNotification("Finished. " + downloadedFiles + " files found.");
+                stopSelf();
+                return;
+            }
+            lastMaxId = 0;
+            hasMore = true;
         }
-        // type 0 = photo/video
-        MediaDataController.getInstance(currentAccount).loadMedia(dialogId, 50, lastMaxId, 0, 0, 0, 1, 0, 0, null, null);
+
+        int type = mediaTypes.get(currentTypeIndex);
+        MediaDataController.getInstance(currentAccount).loadMedia(dialogId, 50, lastMaxId, 0, type, 0, 1, 0, 0, null, null);
     }
 
     @Override
@@ -67,12 +109,16 @@ public class JarooBarghiService extends Service implements NotificationCenter.No
         if (id == NotificationCenter.mediaDidLoad) {
             long uid = (Long) args[0];
             if (uid == dialogId) {
+                int type = (Integer) args[5];
+                if (currentTypeIndex >= mediaTypes.size() || type != mediaTypes.get(currentTypeIndex)) {
+                    return;
+                }
+
                 ArrayList<MessageObject> messages = (ArrayList<MessageObject>) args[2];
 
-                if (messages.isEmpty()) {
+                if (messages == null || messages.isEmpty()) {
                     hasMore = false;
-                    updateNotification("Finished. " + downloadedFiles + " files found.");
-                    stopSelf();
+                    loadNextBatch();
                     return;
                 }
 
@@ -83,20 +129,37 @@ public class JarooBarghiService extends Service implements NotificationCenter.No
 
                 if (messages.size() < 50) {
                    hasMore = false;
-                   updateNotification("Finished. " + downloadedFiles + " files found.");
-                   stopSelf();
-                } else {
-                   loadNextBatch();
                 }
+                loadNextBatch();
             }
         }
     }
 
     private void processMessage(MessageObject msgObj) {
+        long fromId = msgObj.getFromChatId();
+
+        if (!includeUsers.isEmpty() && !includeUsers.contains(fromId)) {
+            return;
+        }
+        if (excludeUsers.contains(fromId)) {
+            return;
+        }
+
         TLRPC.Message message = msgObj.messageOwner;
         if (message.media != null) {
-            FileLoader.getInstance(currentAccount).loadFile(msgObj.getDocument(), msgObj.getPhoto(null), null, 0, 1);
-            downloadedFiles++;
+            if (msgObj.getDocument() != null) {
+                FileLoader.getInstance(currentAccount).loadFile(msgObj.getDocument(), msgObj, 0, 1);
+                downloadedFiles++;
+            } else {
+                TLRPC.Photo photo = msgObj.getPhoto();
+                if (photo != null) {
+                    TLRPC.PhotoSize size = FileLoader.getClosestPhotoSizeWithSize(photo.sizes, AndroidUtilities.getPhotoSize());
+                    if (size != null) {
+                        FileLoader.getInstance(currentAccount).loadFile(ImageLocation.getForPhoto(size, photo), msgObj, null, 0, 1);
+                        downloadedFiles++;
+                    }
+                }
+            }
             updateNotification("Found " + downloadedFiles + " files...");
         }
     }
