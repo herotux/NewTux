@@ -4834,15 +4834,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                         capacitySum += capacity;
                                         capacityCount++;
                                     }
-                                    cpusInfo.append("
-");
+                                    cpusInfo.append("\n");
                                 }
                                 StringBuilder info = new StringBuilder();
-                                info.append(Build.MANUFACTURER).append(", ").append(Build.MODEL).append(" (").append(Build.PRODUCT).append(", ").append(Build.DEVICE).append(") ").append(" (android ").append(Build.VERSION.SDK_INT).append(")
-");
+                                info.append(Build.MANUFACTURER).append(", ").append(Build.MODEL).append(" (").append(Build.PRODUCT).append(", ").append(Build.DEVICE).append(") ").append(" (android ").append(Build.VERSION.SDK_INT).append(")\n");
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                    info.append("SoC: ").append(Build.SOC_MANUFACTURER).append(", ").append(Build.SOC_MODEL).append("
-");
+                                    info.append("SoC: ").append(Build.SOC_MANUFACTURER).append(", ").append(Build.SOC_MODEL).append("\n");
                                 }
                                 String gpuModel = AndroidUtilities.getSysInfoString("/sys/kernel/gpu/gpu_model");
                                 if (gpuModel != null) {
@@ -4859,12 +4856,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                     if (maxClock != null) {
                                         info.append(", max=").append(maxClock / 1000L);
                                     }
-                                    info.append("
-");
+                                    info.append("\n");
                                 }
                                 ConfigurationInfo configurationInfo = ((ActivityManager) ApplicationLoader.applicationContext.getSystemService(Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo();
-                                info.append("GLES Version: ").append(configurationInfo.getGlEsVersion()).append("
-");
+                                info.append("GLES Version: ").append(configurationInfo.getGlEsVersion()).append("\n");
                                 info.append("Memory: class=").append(AndroidUtilities.formatFileSize(memoryClass * 1024L * 1024L));
                                 ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
                                 ((ActivityManager) ApplicationLoader.applicationContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryInfo(memoryInfo);
@@ -4872,14 +4867,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 info.append(", avail=").append(AndroidUtilities.formatFileSize(memoryInfo.availMem));
                                 info.append(", low?=").append(memoryInfo.lowMemory);
                                 info.append(" (threshold=").append(AndroidUtilities.formatFileSize(memoryInfo.threshold)).append(")");
-                                info.append("
-");
+                                info.append("\n");
                                 info.append("Current class: ").append(SharedConfig.performanceClassName(SharedConfig.getDevicePerformanceClass())).append(", measured: ").append(SharedConfig.performanceClassName(SharedConfig.measureDevicePerformanceClass()));
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                     info.append(", suggest=").append(Build.VERSION.MEDIA_PERFORMANCE_CLASS);
                                 }
-                                info.append("
-");
+                                info.append("\n");
                                 info.append(cpuCount).append(" CPUs");
                                 if (minFreqCount > 0) {
                                     info.append(", avgMinFreq=").append(minFreqSum / minFreqCount);
@@ -4893,8 +4886,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 if (capacityCount > 0) {
                                     info.append(", avgCapacity=").append(capacitySum / capacityCount);
                                 }
-                                info.append("
-").append(cpusInfo);
+                                info.append("\n").append(cpusInfo);
 
                                 listCodecs("video/avc", info);
                                 listCodecs("video/hevc", info);
@@ -6169,8 +6161,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
                 if (chatInfo != null && !TextUtils.isEmpty(chatInfo.about)) {
-                    text = String.format("%s
-https://" + getMessagesController().linkPrefix + "/%s", chatInfo.about, ChatObject.getPublicUsername(chat));
+                    text = String.format("%s\nhttps://" + getMessagesController().linkPrefix + "/%s", chatInfo.about, ChatObject.getPublicUsername(chat));
                 } else {
                     text = String.format("https://" + getMessagesController().linkPrefix + "/%s", ChatObject.getPublicUsername(chat));
                 }
@@ -13612,16 +13603,8 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                         aboutLinkCell.setTextAndValue(userInfo.about, LocaleController.getString(R.string.UserBio), addlinks);
                     } else if (position == channelInfoRow) {
                         String text = chatInfo.about;
-                        while (text.contains("
-
-
-")) {
-                            text = text.replace("
-
-
-", "
-
-");
+                        while (text.contains(\n)) {
+                            text = text.replace(\n, \n);
                         }
                         aboutLinkCell.setTextAndValue(text, LocaleController.getString(R.string.DescriptionPlaceholder), ChatObject.isChannel(currentChat) && !currentChat.megagroup);
                     } else if (position == bioRow) {
@@ -13941,10 +13924,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                                     Browser.openUrl(getContext(), getString(botOwner ? R.string.ProfileBotOpenAppInfoOwnerLink : R.string.ProfileBotOpenAppInfoLink));
                                 }));
                                 if (bot_verification != null || bot_manager_id != null) {
-                                    sb.append("
-
-
-");
+                                    sb.append("\n");
                                 }
                             }
                             if (bot_verification != null) {
@@ -15915,13 +15895,10 @@ public void didReceivedNotification(int id, int account, final Object... args) {
             if (decoderIndexes.isEmpty() && encoderIndexes.isEmpty()) {
                 return;
             }
-            info.append("
-").append(decoderIndexes.size()).append("+").append(encoderIndexes.size()).append(" ").append(type.substring(6)).append(" codecs:
-");
+            info.append("\n").append(decoderIndexes.size()).append("+").append(encoderIndexes.size()).append(" ").append(type.substring(6)).append(" codecs:\n");
             for (int a = 0; a < decoderIndexes.size(); ++a) {
                 if (a > 0) {
-                    info.append("
-");
+                    info.append("\n");
                 }
                 MediaCodecInfo codec = MediaCodecList.getCodecInfoAt(decoderIndexes.get(a));
                 info.append("{d} ").append(codec.getName()).append(" (");
@@ -15941,8 +15918,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
             }
             for (int a = 0; a < encoderIndexes.size(); ++a) {
                 if (a > 0 || !decoderIndexes.isEmpty()) {
-                    info.append("
-");
+                    info.append("\n");
                 }
                 MediaCodecInfo codec = MediaCodecList.getCodecInfoAt(encoderIndexes.get(a));
                 info.append("{e} ").append(codec.getName()).append(" (");
@@ -15960,8 +15936,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                 MediaCodecInfo.CodecCapabilities capabilities = codec.getCapabilitiesForType(type);
                 info.append("; mi=").append(capabilities.getMaxSupportedInstances()).append(")");
             }
-            info.append("
-");
+            info.append("\n");
         } catch (Exception ignore) {
         }
     }
@@ -16702,8 +16677,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
             } else {
                 sb = new SpannableStringBuilder();
                 sb.append(TextUtils.concat(
-                    formatPluralStringComma("StarRatingFuture", days), "
-",
+                    formatPluralStringComma("StarRatingFuture", days), \n,
                     formatPluralStringComma("StarRatingFuturePendingPoints", (int) points)
                 ));
                 sb.append(" ");
@@ -16720,8 +16694,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
 
             sb = new SpannableStringBuilder();
             sb.append(TextUtils.concat(
-                formatPluralStringComma("StarRatingFuturePreview1", days), "
-",
+                formatPluralStringComma("StarRatingFuturePreview1", days), \n,
                 formatPluralStringComma("StarRatingFuturePreview2", (int) points)
             ));
             sb.append(" ");
