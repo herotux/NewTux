@@ -494,7 +494,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
         accountNumbers.clear();
         for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
-            if (UserConfig.getInstance(a).isClientActivated() && (!UserConfig.getInstance(a).isHidden || org.telegram.messenger.SharedConfig.revealHidden)) {
+            if (UserConfig.getInstance(a).isClientActivated()) {
                 accountNumbers.add(a);
             }
         }
@@ -548,12 +548,6 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
                     if (LaunchActivity.instance != null) {
                         LaunchActivity.instance.switchToAccount(account, true);
                     }
-                });
-                btn.setOnLongClickListener(v -> {
-                    UserConfig.getInstance(account).isHidden = !UserConfig.getInstance(account).isHidden;
-                    UserConfig.getInstance(account).saveConfig(false);
-                    o.dismiss();
-                    return true;
                 });
                 o.addView(btn, LayoutHelper.createLinear(230, 48));
             }

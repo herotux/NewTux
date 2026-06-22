@@ -1245,7 +1245,10 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     private void switchToAvailableAccountOrLogout() {
         int account = -1;
         for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
-            if (UserConfig.getInstance(a).isClientActivated() && (!UserConfig.getInstance(a).isHidden || org.telegram.messenger.SharedConfig.revealHidden)) { account = a; break; }
+            if (UserConfig.getInstance(a).isClientActivated()) {
+                account = a;
+                break;
+            }
         }
         if (termsOfServiceView != null) {
             termsOfServiceView.setVisibility(View.GONE);
@@ -8630,7 +8633,10 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
 
                 int account = -1;
                 for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
-                    if (UserConfig.getInstance(a).isClientActivated() && (!UserConfig.getInstance(a).isHidden || org.telegram.messenger.SharedConfig.revealHidden)) { account = a; break; }
+                    if (UserConfig.getInstance(a).isClientActivated()) {
+                        account = a;
+                        break;
+                    }
                 }
 
                 if (fragment instanceof LoginActivity && account == -1) {
@@ -8702,7 +8708,10 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
 
                 int account = -1;
                 for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
-                    if (UserConfig.getInstance(a).isClientActivated() && (!UserConfig.getInstance(a).isHidden || org.telegram.messenger.SharedConfig.revealHidden)) { account = a; break; }
+                    if (UserConfig.getInstance(a).isClientActivated()) {
+                        account = a;
+                        break;
+                    }
                 }
 
                 if (fragment instanceof LoginActivity && account == -1) {

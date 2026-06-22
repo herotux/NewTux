@@ -202,7 +202,7 @@ public class WearAuthSheet {
         final ArrayList<Integer> accountNumbers = new ArrayList<>();
         accountNumbers.clear();
         for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
-            if (UserConfig.getInstance(a).isClientActivated() && (!UserConfig.getInstance(a).isHidden || org.telegram.messenger.SharedConfig.revealHidden)) {
+            if (UserConfig.getInstance(a).isClientActivated()) {
                 if (!ConnectionsManager.getInstance(a).isTestBackend()) {
                     nonTestAccount = a;
                 }
