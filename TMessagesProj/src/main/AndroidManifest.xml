@@ -478,6 +478,12 @@
             android:foregroundServiceType="dataSync"
         />
         <service
+            android:name="org.telegram.messenger.JarooBarghiService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="dataSync"
+        />
+        <service
             android:name=".NotificationRepeat"
             android:exported="false"
             android:foregroundServiceType="dataSync"

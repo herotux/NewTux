@@ -53,6 +53,7 @@ public class UserConfig extends BaseController {
     public long migrateOffsetChannelId = -1;
     public long migrateOffsetAccess = -1;
     public boolean filtersLoaded;
+    public boolean isHidden;
 
     public int sharingMyLocationUntil;
     public int lastMyLocationShareTime;
@@ -152,6 +153,7 @@ public class UserConfig extends BaseController {
                     editor.putInt("lastContactsSyncTime", lastContactsSyncTime);
                     editor.putInt("lastHintsSyncTime", lastHintsSyncTime);
                     editor.putBoolean("draftsLoaded", draftsLoaded);
+                    editor.putBoolean("isHidden", isHidden);
                     editor.putBoolean("unreadDialogsLoaded", unreadDialogsLoaded);
                     editor.putInt("ratingLoadTime", ratingLoadTime);
                     editor.putInt("botRatingLoadTime", botRatingLoadTime);
@@ -375,6 +377,7 @@ public class UserConfig extends BaseController {
                 checkPremiumSelf(null, currentUser);
                 clientUserId = currentUser.id;
             }
+            isHidden = preferences.getBoolean("isHidden", false);
             configLoaded = true;
         }
     }

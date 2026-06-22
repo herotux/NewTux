@@ -261,9 +261,13 @@ public class AndroidUtilities {
     public static ThreadLocal<byte[]> readBufferLocal = new ThreadLocal<>();
     public static ThreadLocal<byte[]> bufferLocal = new ThreadLocal<>();
 
+    public static Typeface regular() {
+        return getTypeface(null);
+    }
+
     public static Typeface bold() {
         if (mediumTypeface == null) {
-            if (SharedConfig.useSystemBoldFont && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (SharedConfig.useSystemBoldFont && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && SharedConfig.persianFont == 0) {
                 mediumTypeface = Typeface.create(null, 500, false);
             } else {
                 mediumTypeface = getTypeface(TYPEFACE_ROBOTO_MEDIUM);

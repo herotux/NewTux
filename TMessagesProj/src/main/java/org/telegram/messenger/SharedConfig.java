@@ -241,6 +241,7 @@ public class SharedConfig {
 
     public static int lastPauseTime;
     public static boolean isWaitingForPasscodeEnter;
+    public static boolean revealHidden = false;
     public static boolean useFingerprintLock = true;
     public static boolean useFaceLock = true;
     public static int suggestStickers;

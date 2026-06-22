@@ -623,8 +623,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
 
         accountNumbers.clear();
         for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) {
-            if (UserConfig.getInstance(a).isClientActivated() && currentAccount != a) {
-                accountNumbers.add(a);
+            if (UserConfig.getInstance(a).isClientActivated() && currentAccount != a && (!UserConfig.getInstance(a).isHidden || org.telegram.messenger.SharedConfig.revealHidden)) { accountNumbers.add(a);
             }
         }
         Collections.sort(accountNumbers, (o1, o2) -> {
