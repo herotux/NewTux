@@ -8999,33 +8999,34 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     }
 
     @SuppressWarnings("unchecked")
-    @Override
 
     private void openJarooBarghiDialog() {
         if (getParentActivity() == null) return;
-
-        final boolean[] selectedTypes = new boolean[9]; // MEDIA_PHOTOVIDEO to MEDIA_VIDEOS_ONLY
+    
+        final boolean[] selectedTypes = new boolean[8]; // تغییر اندازه به ۸
         String[] typeNames = {"Photos/Videos", "Files", "Audio", "Links", "Music", "GIFs", "Photos Only", "Videos Only"};
-
+    
         AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
         builder.setTitle("Jaroo Barghi - Media Types");
-        builder.setMultiChoiceItems(typeNames, selectedTypes, (dialog, which, isChecked) -> {
+        
+
+        builder.setMultiChoiceItems(typeNames, selectedTypes, (DialogInterface.OnMultiChoiceClickListener) (dialog, which, isChecked) -> {
             selectedTypes[which] = isChecked;
         });
-
+    
         builder.setPositiveButton("Next", (dialog, which) -> {
             ArrayList<Integer> types = new ArrayList<>();
             for (int i = 0; i < selectedTypes.length; i++) {
                 if (selectedTypes[i]) types.add(i);
             }
             if (types.isEmpty()) return;
-
+    
             showUserSelectionDialog(types);
         });
         builder.setNegativeButton("Cancel", null);
         showDialog(builder.create());
     }
-
+    
     private void showUserSelectionDialog(ArrayList<Integer> types) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
         builder.setTitle("Jaroo Barghi - User Filter");
@@ -9036,13 +9037,16 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             } else {
                 Bundle args = new Bundle();
                 args.putInt("type", UsersSelectActivity.TYPE_PRIVATE);
-                UsersSelectActivity fragment = new UsersSelectActivity(args);
+                
+                UsersSelectActivity fragment = new UsersSelectActivity(UsersSelectActivity.TYPE_PRIVATE);
+                fragment.setArguments(args);
+                
                 fragment.setDelegate(new UsersSelectActivity.FilterUsersActivityDelegate() {
                     @Override
                     public void didSelectChats(ArrayList<Long> ids, int flags) {
                         long[] userIds = new long[ids.size()];
                         for (int i = 0; i < ids.size(); i++) userIds[i] = ids.get(i);
-
+    
                         if (which == 1) {
                             startJarooBarghiService(types, userIds, null);
                         } else {
