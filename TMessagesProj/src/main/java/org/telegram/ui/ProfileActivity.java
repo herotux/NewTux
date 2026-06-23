@@ -6152,9 +6152,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
                 if (botInfo != null && userInfo != null && !TextUtils.isEmpty(userInfo.about)) {
-                    text = String.format("%s https://" + getMessagesController().linkPrefix + "/%s", userInfo.about, UserObject.getPublicUsername(user));
+                    text = String.format("%s\nhttps://%s/%s", userInfo.about, getMessagesController().linkPrefix, UserObject.getPublicUsername(user));
                 } else {
-                    text = String.format("https://" + getMessagesController().linkPrefix + "/%s", UserObject.getPublicUsername(user));
+                    text = String.format("https://%s/%s", getMessagesController().linkPrefix, UserObject.getPublicUsername(user));
                 }
             } else if (chatId != 0) {
                 TLRPC.Chat chat = getMessagesController().getChat(chatId);
@@ -6162,9 +6162,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
                 if (chatInfo != null && !TextUtils.isEmpty(chatInfo.about)) {
-                    text = String.format("%s""\n""https://" + getMessagesController().linkPrefix + "/%s", chatInfo.about, ChatObject.getPublicUsername(chat));
+                    text = String.format("%s\nhttps://%s/%s", chatInfo.about, getMessagesController().linkPrefix, ChatObject.getPublicUsername(chat));
                 } else {
-                    text = String.format("https://" + getMessagesController().linkPrefix + "/%s", ChatObject.getPublicUsername(chat));
+                    text = String.format("https://%s/%s", getMessagesController().linkPrefix, ChatObject.getPublicUsername(chat));
                 }
             }
             if (TextUtils.isEmpty(text)) {
