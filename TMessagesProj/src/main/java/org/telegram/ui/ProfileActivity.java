@@ -2689,7 +2689,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 presentFragment(editRightsActivity);
                             }));
                         } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                             builder.setTitle(LocaleController.getString(R.string.AddBot));
                             String chatName = chat == null ? "" : chat.title;
                             builder.setMessage(AndroidUtilities.replaceTags(formatString("AddMembersAlertNamesText", R.string.AddMembersAlertNamesText, UserObject.getUserName(user), chatName)));
@@ -2759,7 +2759,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     fragment.setChatInfo(chatInfo);
                     presentFragment(fragment);
                 } else if (id == start_secret_chat) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                     builder.setTitle(LocaleController.getString(R.string.AreYouSureSecretChatTitle));
                     builder.setMessage(LocaleController.getString(R.string.AreYouSureSecretChat));
                     builder.setPositiveButton(LocaleController.getString(R.string.Start), (dialogInterface, i) -> {
@@ -2881,7 +2881,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     }
                     imageUpdater.openPhotoForEdit(f.getAbsolutePath(), thumb, 0, isVideo);
                 } else if (id == delete_avatar) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                     ImageLocation location = avatarsViewPager.getImageLocation(avatarsViewPager.getRealPosition());
                     if (location == null) {
                         return;
@@ -4367,7 +4367,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     button.setTextColor(Theme.getColor(Theme.key_text_RedBold));
                 }
             } else if (position == reportReactionRow) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.ReportReaction2));
                 builder.setMessage(LocaleController.getString(R.string.ReportAlertReaction));
 
@@ -4628,7 +4628,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (position == versionRow) {
                     pressCount++;
                     if (pressCount >= 2 || BuildVars.DEBUG_PRIVATE_VERSION) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                         builder.setTitle(getString(R.string.DebugMenu));
                         CharSequence[] items;
                         items = new CharSequence[]{
@@ -5070,7 +5070,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (searchAdapter.isSearchWas() || searchAdapter.recentSearches.isEmpty()) {
                     return false;
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.ClearSearchAlertTitle));
                 builder.setMessage(LocaleController.getString(R.string.ClearSearchAlert));
                 builder.setPositiveButton(LocaleController.getString(R.string.ClearButton), (dialogInterface, i) -> searchAdapter.clearRecent());
@@ -6104,7 +6104,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     }, resourcesProvider);
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                     builder.setTitle(LocaleController.getString(R.string.BlockUser));
                     builder.setMessage(AndroidUtilities.replaceTags(formatString("AreYouSureBlockContact2", R.string.AreYouSureBlockContact2, ContactsController.formatName(user.first_name, user.last_name))));
                     builder.setPositiveButton(LocaleController.getString(R.string.BlockContact), (dialogInterface, i) -> {
@@ -6152,9 +6152,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
                 if (botInfo != null && userInfo != null && !TextUtils.isEmpty(userInfo.about)) {
-                    text = String.format("%s https://%s/%s", userInfo.about, getMessagesController().linkPrefix, UserObject.getPublicUsername(user));
+                    text = String.format("%s https://" + getMessagesController().linkPrefix + "/%s", userInfo.about, UserObject.getPublicUsername(user));
                 } else {
-                    text = String.format("https://%s/%s", getMessagesController().linkPrefix, UserObject.getPublicUsername(user));
+                    text = String.format("https://" + getMessagesController().linkPrefix + "/%s", UserObject.getPublicUsername(user));
                 }
             } else if (chatId != 0) {
                 TLRPC.Chat chat = getMessagesController().getChat(chatId);
@@ -6162,10 +6162,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
                 if (chatInfo != null && !TextUtils.isEmpty(chatInfo.about)) {
-                    // The error was here: removed the broken "%s""\n""https://" and replaced it with a single valid format string
-                    text = String.format("%s\nhttps://%s/%s", chatInfo.about, getMessagesController().linkPrefix, ChatObject.getPublicUsername(chat));
+                    text = String.format("%s""\n""https://" + getMessagesController().linkPrefix + "/%s", chatInfo.about, ChatObject.getPublicUsername(chat));
                 } else {
-                    text = String.format("https://%s/%s", getMessagesController().linkPrefix, ChatObject.getPublicUsername(chat));
+                    text = String.format("https://" + getMessagesController().linkPrefix + "/%s", ChatObject.getPublicUsername(chat));
                 }
             }
             if (TextUtils.isEmpty(text)) {
@@ -8999,54 +8998,48 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     }
 
     @SuppressWarnings("unchecked")
+    @Override
 
     private void openJarooBarghiDialog() {
         if (getParentActivity() == null) return;
-    
-        final boolean[] selectedTypes = new boolean[8]; // تغییر اندازه به ۸
-        String[] typeNames = {"Photos/Videos", "Files", "Audio", "Links", "Music", "GIFs", "Photos Only", "Videos Only"};
-    
-        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
-        builder.setTitle("Jaroo Barghi - Media Types");
-        
 
-        builder.setMultiChoiceItems(typeNames, selectedTypes, (DialogInterface.OnMultiChoiceClickListener) (dialog, which, isChecked) -> {
+        final boolean[] selectedTypes = new boolean[9]; // MEDIA_PHOTOVIDEO to MEDIA_VIDEOS_ONLY
+        String[] typeNames = {"Photos/Videos", "Files", "Audio", "Links", "Music", "GIFs", "Photos Only", "Videos Only"};
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
+        builder.setTitle("Jaroo Barghi - Media Types");
+        builder.setMultiChoiceItems(typeNames, selectedTypes, (dialog, which, isChecked) -> {
             selectedTypes[which] = isChecked;
         });
-    
+
         builder.setPositiveButton("Next", (dialog, which) -> {
             ArrayList<Integer> types = new ArrayList<>();
             for (int i = 0; i < selectedTypes.length; i++) {
                 if (selectedTypes[i]) types.add(i);
             }
             if (types.isEmpty()) return;
-    
+
             showUserSelectionDialog(types);
         });
         builder.setNegativeButton("Cancel", null);
         showDialog(builder.create());
     }
-    
+
     private void showUserSelectionDialog(ArrayList<Integer> types) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
         builder.setTitle("Jaroo Barghi - User Filter");
         String[] options = {"All Users", "Include Specific Users", "Exclude Specific Users"};
         builder.setItems(options, (dialog, which) -> {
             if (which == 0) {
                 startJarooBarghiService(types, null, null);
             } else {
-                Bundle args = new Bundle();
-                args.putInt("type", UsersSelectActivity.TYPE_PRIVATE);
-                
                 UsersSelectActivity fragment = new UsersSelectActivity(UsersSelectActivity.TYPE_PRIVATE);
-                fragment.setArguments(args);
-                
                 fragment.setDelegate(new UsersSelectActivity.FilterUsersActivityDelegate() {
                     @Override
                     public void didSelectChats(ArrayList<Long> ids, int flags) {
                         long[] userIds = new long[ids.size()];
                         for (int i = 0; i < ids.size(); i++) userIds[i] = ids.get(i);
-    
+
                         if (which == 1) {
                             startJarooBarghiService(types, userIds, null);
                         } else {
@@ -16298,7 +16291,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                 presentFragment(new OpeningHoursActivity());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.ProfileHoursRemove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.BusinessHoursClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.BusinessHoursClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16326,7 +16319,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                 presentFragment(new org.telegram.ui.Business.LocationActivity());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.ProfileLocationRemove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.BusinessLocationClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.BusinessLocationClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16413,7 +16406,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                 }, false, false, getResourceProvider()).create());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.Remove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.BirthdayClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.BirthdayClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16447,7 +16440,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                 presentFragment(new UserInfoActivity());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.Remove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.ProfileChannelClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.ProfileChannelClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
