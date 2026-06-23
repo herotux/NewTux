@@ -652,6 +652,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int userInfoRow;
     private int channelInfoRow;
     private int usernameRow;
+    private int userIdRow;
     private int notificationsDividerRow;
     private int notificationsRow;
     private int bizHoursRow;
@@ -6161,7 +6162,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
                 if (chatInfo != null && !TextUtils.isEmpty(chatInfo.about)) {
-                    text = String.format("%s\nhttps://" + getMessagesController().linkPrefix + "/%s", chatInfo.about, ChatObject.getPublicUsername(chat));
+                    text = String.format("%s""\n""https://" + getMessagesController().linkPrefix + "/%s", chatInfo.about, ChatObject.getPublicUsername(chat));
                 } else {
                     text = String.format("https://" + getMessagesController().linkPrefix + "/%s", ChatObject.getPublicUsername(chat));
                 }
@@ -10506,6 +10507,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
         locationRow = -1;
         channelInfoRow = -1;
         usernameRow = -1;
+        userIdRow = -1;
         settingsTimerRow = -1;
         settingsKeyRow = -1;
         notificationsDividerRow = -1;
@@ -10697,6 +10699,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                 }
                 if (user != null && username != null) {
                     usernameRow = rowCount++;
+                    userIdRow = rowCount++;
                 }
                 if (userInfo != null) {
                     if (userInfo.birthday != null) {
@@ -10817,6 +10820,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                 }
             }
             usernameRow = rowCount++;
+                    userIdRow = rowCount++;
             if (actionsView == null) {
                 notificationsSimpleRow = rowCount++;
             }
@@ -10850,6 +10854,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                 }
                 if (ChatObject.isPublic(currentChat)) {
                     usernameRow = rowCount++;
+                    userIdRow = rowCount++;
                 }
             }
             if (emptyRow < 0 && emptyRow2 < 0) {
@@ -13571,6 +13576,8 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                         }
                         detailCell.setTextAndValue(text, value, true);
                         detailCell.setContentDescriptionValueFirst(true);
+                    } else if (position == userIdRow) {
+                        detailCell.setTextAndValue("" + getDialogId(), "ID", true);
                     }
                     if (containsGift) {
                         Drawable drawable = ContextCompat.getDrawable(detailCell.getContext(), R.drawable.msg_input_gift);
@@ -13603,8 +13610,8 @@ public void didReceivedNotification(int id, int account, final Object... args) {
                         aboutLinkCell.setTextAndValue(userInfo.about, LocaleController.getString(R.string.UserBio), addlinks);
                     } else if (position == channelInfoRow) {
                         String text = chatInfo.about;
-                        while (text.contains(\n)) {
-                            text = text.replace(\n, \n);
+                        while (text.contains("\n")) {
+                            text = text.replace("\n", "\n");
                         }
                         aboutLinkCell.setTextAndValue(text, LocaleController.getString(R.string.DescriptionPlaceholder), ChatObject.isChannel(currentChat) && !currentChat.megagroup);
                     } else if (position == bioRow) {
@@ -16677,7 +16684,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
             } else {
                 sb = new SpannableStringBuilder();
                 sb.append(TextUtils.concat(
-                    formatPluralStringComma("StarRatingFuture", days), \n,
+                    formatPluralStringComma("StarRatingFuture", days), "\n",
                     formatPluralStringComma("StarRatingFuturePendingPoints", (int) points)
                 ));
                 sb.append(" ");
@@ -16694,7 +16701,7 @@ public void didReceivedNotification(int id, int account, final Object... args) {
 
             sb = new SpannableStringBuilder();
             sb.append(TextUtils.concat(
-                formatPluralStringComma("StarRatingFuturePreview1", days), \n,
+                formatPluralStringComma("StarRatingFuturePreview1", days), "\n",
                 formatPluralStringComma("StarRatingFuturePreview2", (int) points)
             ));
             sb.append(" ");
