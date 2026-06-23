@@ -2580,7 +2580,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     });
                     builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
-                    AlertDialog dialog = builder.create();
+                    android.app.AlertDialog dialog = builder.create();
                     showDialog(dialog);
                     TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     if (button != null) {
@@ -2626,7 +2626,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         dialog.dismiss();
                     });
                     builder.setNegativeButton(LocaleController.getString(R.string.Cancel), (dialog, which) -> dialog.dismiss());
-                    AlertDialog alertDialog = builder.create();
+                    android.app.AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                     TextView button = (TextView) alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     if (button != null) {
@@ -2961,7 +2961,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     });
                     builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
-                    AlertDialog alertDialog = builder.create();
+                    android.app.AlertDialog alertDialog = builder.create();
                     showDialog(alertDialog);
                     TextView button = (TextView) alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     if (button != null) {
@@ -4408,7 +4408,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 builder.setNegativeButton(LocaleController.getString(R.string.Cancel), (dialog, which) -> {
                     dialog.dismiss();
                 });
-                AlertDialog dialog = builder.show();
+                android.app.AlertDialog dialog = builder.show();
                 TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 if (button != null) {
                     button.setTextColor(Theme.getColor(Theme.key_text_RedBold));
@@ -5075,7 +5075,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 builder.setMessage(LocaleController.getString(R.string.ClearSearchAlert));
                 builder.setPositiveButton(LocaleController.getString(R.string.ClearButton), (dialogInterface, i) -> searchAdapter.clearRecent());
                 builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
-                AlertDialog dialog = builder.create();
+                android.app.AlertDialog dialog = builder.create();
                 showDialog(dialog);
                 TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 if (button != null) {
@@ -6114,7 +6114,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     });
                     builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
-                    AlertDialog dialog = builder.create();
+                    android.app.AlertDialog dialog = builder.create();
                     showDialog(dialog);
                     TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     if (button != null) {
@@ -8997,10 +8997,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         isInLandscapeMode = size.x > size.y;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-
-    private void openJarooBarghiDialog() {
+        private void openJarooBarghiDialog() {
         if (getParentActivity() == null) return;
 
         final boolean[] selectedTypes = new boolean[9]; // MEDIA_PHOTOVIDEO to MEDIA_VIDEOS_ONLY
@@ -9070,7 +9067,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         }
     }
 
-public void didReceivedNotification(int id, int account, final Object... args) {
+@Override
+    public void didReceivedNotification(int id, int account, final Object... args) {
         if (id == NotificationCenter.uploadStoryEnd || id == NotificationCenter.chatWasBoostedByUser) {
             checkCanSendStoryForPosting();
         } else if (id == NotificationCenter.updateInterfaces) {
