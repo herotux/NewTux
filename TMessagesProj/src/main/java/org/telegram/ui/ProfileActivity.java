@@ -2580,7 +2580,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     });
                     builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
-                    android.app.AlertDialog dialog = builder.create();
+                    AlertDialog dialog = builder.create();
                     showDialog(dialog);
                     TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     if (button != null) {
@@ -2626,7 +2626,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         dialog.dismiss();
                     });
                     builder.setNegativeButton(LocaleController.getString(R.string.Cancel), (dialog, which) -> dialog.dismiss());
-                    android.app.AlertDialog alertDialog = builder.create();
+                    AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                     TextView button = (TextView) alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     if (button != null) {
@@ -4408,7 +4408,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 builder.setNegativeButton(LocaleController.getString(R.string.Cancel), (dialog, which) -> {
                     dialog.dismiss();
                 });
-                android.app.AlertDialog dialog = builder.show();
+                android.app.android.app.AlertDialog dialog = builder.show();
                 TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 if (button != null) {
                     button.setTextColor(Theme.getColor(Theme.key_text_RedBold));
