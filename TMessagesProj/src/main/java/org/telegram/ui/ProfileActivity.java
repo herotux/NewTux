@@ -4408,7 +4408,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 builder.setNegativeButton(LocaleController.getString(R.string.Cancel), (dialog, which) -> {
                     dialog.dismiss();
                 });
-                android.app.android.app.AlertDialog dialog = builder.show();
+                android.app.AlertDialog dialog = builder.show();
                 TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 if (button != null) {
                     button.setTextColor(Theme.getColor(Theme.key_text_RedBold));
