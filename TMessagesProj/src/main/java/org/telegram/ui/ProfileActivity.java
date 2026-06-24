@@ -592,6 +592,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private final static int set_username = 43;
     private final static int bot_privacy = 44;
     private final static int delete_group = 45;
+    private final static int jaroo_barghi = 50;
     private final static int enable_no_forwards = 46;
     private final static int disable_no_forwards = 47;
 
@@ -651,6 +652,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int userInfoRow;
     private int channelInfoRow;
     private int usernameRow;
+    private int userIdRow;
     private int notificationsDividerRow;
     private int notificationsRow;
     private int bizHoursRow;
@@ -2537,6 +2539,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         return;
                     }
                     finishFragment();
+                } else if (id == jaroo_barghi) {
+                    openJarooBarghiDialog();
                 } else if (id == block_contact) {
                     onBlockContactClicked(false);
                 } else if (id == add_contact) {
@@ -2685,7 +2689,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 presentFragment(editRightsActivity);
                             }));
                         } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                             builder.setTitle(LocaleController.getString(R.string.AddBot));
                             String chatName = chat == null ? "" : chat.title;
                             builder.setMessage(AndroidUtilities.replaceTags(formatString("AddMembersAlertNamesText", R.string.AddMembersAlertNamesText, UserObject.getUserName(user), chatName)));
@@ -2755,7 +2759,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     fragment.setChatInfo(chatInfo);
                     presentFragment(fragment);
                 } else if (id == start_secret_chat) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                     builder.setTitle(LocaleController.getString(R.string.AreYouSureSecretChatTitle));
                     builder.setMessage(LocaleController.getString(R.string.AreYouSureSecretChat));
                     builder.setPositiveButton(LocaleController.getString(R.string.Start), (dialogInterface, i) -> {
@@ -2877,7 +2881,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     }
                     imageUpdater.openPhotoForEdit(f.getAbsolutePath(), thumb, 0, isVideo);
                 } else if (id == delete_avatar) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                     ImageLocation location = avatarsViewPager.getImageLocation(avatarsViewPager.getRealPosition());
                     if (location == null) {
                         return;
@@ -2957,7 +2961,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     });
                     builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
-                    AlertDialog alertDialog = builder.create();
+                    android.app.AlertDialog alertDialog = builder.create();
                     showDialog(alertDialog);
                     TextView button = (TextView) alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     if (button != null) {
@@ -4363,7 +4367,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     button.setTextColor(Theme.getColor(Theme.key_text_RedBold));
                 }
             } else if (position == reportReactionRow) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.ReportReaction2));
                 builder.setMessage(LocaleController.getString(R.string.ReportAlertReaction));
 
@@ -4404,7 +4408,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 builder.setNegativeButton(LocaleController.getString(R.string.Cancel), (dialog, which) -> {
                     dialog.dismiss();
                 });
-                AlertDialog dialog = builder.show();
+                android.app.AlertDialog dialog = builder.show();
                 TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 if (button != null) {
                     button.setTextColor(Theme.getColor(Theme.key_text_RedBold));
@@ -4624,7 +4628,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (position == versionRow) {
                     pressCount++;
                     if (pressCount >= 2 || BuildVars.DEBUG_PRIVATE_VERSION) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                         builder.setTitle(getString(R.string.DebugMenu));
                         CharSequence[] items;
                         items = new CharSequence[]{
@@ -5066,12 +5070,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (searchAdapter.isSearchWas() || searchAdapter.recentSearches.isEmpty()) {
                     return false;
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.ClearSearchAlertTitle));
                 builder.setMessage(LocaleController.getString(R.string.ClearSearchAlert));
                 builder.setPositiveButton(LocaleController.getString(R.string.ClearButton), (dialogInterface, i) -> searchAdapter.clearRecent());
                 builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
-                AlertDialog dialog = builder.create();
+                android.app.AlertDialog dialog = builder.create();
                 showDialog(dialog);
                 TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 if (button != null) {
@@ -6100,7 +6104,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     }, resourcesProvider);
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                     builder.setTitle(LocaleController.getString(R.string.BlockUser));
                     builder.setMessage(AndroidUtilities.replaceTags(formatString("AreYouSureBlockContact2", R.string.AreYouSureBlockContact2, ContactsController.formatName(user.first_name, user.last_name))));
                     builder.setPositiveButton(LocaleController.getString(R.string.BlockContact), (dialogInterface, i) -> {
@@ -6110,7 +6114,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     });
                     builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
-                    AlertDialog dialog = builder.create();
+                    android.app.AlertDialog dialog = builder.create();
                     showDialog(dialog);
                     TextView button = (TextView) dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                     if (button != null) {
@@ -6148,9 +6152,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
                 if (botInfo != null && userInfo != null && !TextUtils.isEmpty(userInfo.about)) {
-                    text = String.format("%s https://" + getMessagesController().linkPrefix + "/%s", userInfo.about, UserObject.getPublicUsername(user));
+                    text = String.format("%s\nhttps://%s/%s", userInfo.about, getMessagesController().linkPrefix, UserObject.getPublicUsername(user));
                 } else {
-                    text = String.format("https://" + getMessagesController().linkPrefix + "/%s", UserObject.getPublicUsername(user));
+                    text = String.format("https://%s/%s", getMessagesController().linkPrefix, UserObject.getPublicUsername(user));
                 }
             } else if (chatId != 0) {
                 TLRPC.Chat chat = getMessagesController().getChat(chatId);
@@ -6158,9 +6162,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     return;
                 }
                 if (chatInfo != null && !TextUtils.isEmpty(chatInfo.about)) {
-                    text = String.format("%s\nhttps://" + getMessagesController().linkPrefix + "/%s", chatInfo.about, ChatObject.getPublicUsername(chat));
+                    text = String.format("%s\nhttps://%s/%s", chatInfo.about, getMessagesController().linkPrefix, ChatObject.getPublicUsername(chat));
                 } else {
-                    text = String.format("https://" + getMessagesController().linkPrefix + "/%s", ChatObject.getPublicUsername(chat));
+                    text = String.format("https://%s/%s", getMessagesController().linkPrefix, ChatObject.getPublicUsername(chat));
                 }
             }
             if (TextUtils.isEmpty(text)) {
@@ -8993,8 +8997,77 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         isInLandscapeMode = size.x > size.y;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
+        private void openJarooBarghiDialog() {
+        if (getParentActivity() == null) return;
+
+        final boolean[] selectedTypes = new boolean[9]; // MEDIA_PHOTOVIDEO to MEDIA_VIDEOS_ONLY
+        String[] typeNames = {"Photos/Videos", "Files", "Audio", "Links", "Music", "GIFs", "Photos Only", "Videos Only"};
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
+        builder.setTitle("Jaroo Barghi - Media Types");
+        builder.setMultiChoiceItems(typeNames, selectedTypes, (dialog, which, isChecked) -> {
+            selectedTypes[which] = isChecked;
+        });
+
+        builder.setPositiveButton("Next", (dialog, which) -> {
+            ArrayList<Integer> types = new ArrayList<>();
+            for (int i = 0; i < selectedTypes.length; i++) {
+                if (selectedTypes[i]) types.add(i);
+            }
+            if (types.isEmpty()) return;
+
+            showUserSelectionDialog(types);
+        });
+        builder.setNegativeButton("Cancel", null);
+        showDialog(builder.create());
+    }
+
+    private void showUserSelectionDialog(ArrayList<Integer> types) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
+        builder.setTitle("Jaroo Barghi - User Filter");
+        String[] options = {"All Users", "Include Specific Users", "Exclude Specific Users"};
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                startJarooBarghiService(types, null, null);
+            } else {
+                UsersSelectActivity fragment = new UsersSelectActivity(UsersSelectActivity.TYPE_PRIVATE);
+                fragment.setDelegate(new UsersSelectActivity.FilterUsersActivityDelegate() {
+                    @Override
+                    public void didSelectChats(ArrayList<Long> ids, int flags) {
+                        long[] userIds = new long[ids.size()];
+                        for (int i = 0; i < ids.size(); i++) userIds[i] = ids.get(i);
+
+                        if (which == 1) {
+                            startJarooBarghiService(types, userIds, null);
+                        } else {
+                            startJarooBarghiService(types, null, userIds);
+                        }
+                    }
+                });
+                presentFragment(fragment);
+            }
+        });
+        showDialog(builder.create());
+    }
+
+    private void startJarooBarghiService(ArrayList<Integer> types, long[] include, long[] exclude) {
+        Intent intent = new Intent(getParentActivity(), org.telegram.messenger.JarooBarghiService.class);
+        intent.putExtra("account", currentAccount);
+        intent.putExtra("dialogId", getDialogId());
+        int[] typesArray = new int[types.size()];
+        for (int i = 0; i < types.size(); i++) typesArray[i] = types.get(i);
+        intent.putExtra("types", typesArray);
+        if (include != null) intent.putExtra("includeUsers", include);
+        if (exclude != null) intent.putExtra("excludeUsers", exclude);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            getParentActivity().startForegroundService(intent);
+        } else {
+            getParentActivity().startService(intent);
+        }
+    }
+
+@Override
     public void didReceivedNotification(int id, int account, final Object... args) {
         if (id == NotificationCenter.uploadStoryEnd || id == NotificationCenter.chatWasBoostedByUser) {
             checkCanSendStoryForPosting();
@@ -10430,6 +10503,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         locationRow = -1;
         channelInfoRow = -1;
         usernameRow = -1;
+        userIdRow = -1;
         settingsTimerRow = -1;
         settingsKeyRow = -1;
         notificationsDividerRow = -1;
@@ -10621,6 +10695,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (user != null && username != null) {
                     usernameRow = rowCount++;
+                    userIdRow = rowCount++;
                 }
                 if (userInfo != null) {
                     if (userInfo.birthday != null) {
@@ -10741,6 +10816,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
             }
             usernameRow = rowCount++;
+                    userIdRow = rowCount++;
             if (actionsView == null) {
                 notificationsSimpleRow = rowCount++;
             }
@@ -10774,6 +10850,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (ChatObject.isPublic(currentChat)) {
                     usernameRow = rowCount++;
+                    userIdRow = rowCount++;
                 }
             }
             if (emptyRow < 0 && emptyRow2 < 0) {
@@ -11954,6 +12031,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         }
         Context context = actionBar.getContext();
         otherItem.removeAllSubItems();
+        otherItem.addSubItem(jaroo_barghi, R.drawable.msg_download, "Jaroo Barghi");
         animatingItem = null;
 
         editItemVisible = false;
@@ -13494,6 +13572,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                         detailCell.setTextAndValue(text, value, true);
                         detailCell.setContentDescriptionValueFirst(true);
+                    } else if (position == userIdRow) {
+                        detailCell.setTextAndValue("" + getDialogId(), "ID", true);
                     }
                     if (containsGift) {
                         Drawable drawable = ContextCompat.getDrawable(detailCell.getContext(), R.drawable.msg_input_gift);
@@ -13526,8 +13606,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         aboutLinkCell.setTextAndValue(userInfo.about, LocaleController.getString(R.string.UserBio), addlinks);
                     } else if (position == channelInfoRow) {
                         String text = chatInfo.about;
-                        while (text.contains("\n\n\n")) {
-                            text = text.replace("\n\n\n", "\n\n");
+                        while (text.contains("\n")) {
+                            text = text.replace("\n", "\n");
                         }
                         aboutLinkCell.setTextAndValue(text, LocaleController.getString(R.string.DescriptionPlaceholder), ChatObject.isChannel(currentChat) && !currentChat.megagroup);
                     } else if (position == bioRow) {
@@ -13847,7 +13927,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                     Browser.openUrl(getContext(), getString(botOwner ? R.string.ProfileBotOpenAppInfoOwnerLink : R.string.ProfileBotOpenAppInfoLink));
                                 }));
                                 if (bot_verification != null || bot_manager_id != null) {
-                                    sb.append("\n\n\n");
+                                    sb.append("\n");
                                 }
                             }
                             if (bot_verification != null) {
@@ -16209,7 +16289,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 presentFragment(new OpeningHoursActivity());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.ProfileHoursRemove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.BusinessHoursClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.BusinessHoursClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16237,7 +16317,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 presentFragment(new org.telegram.ui.Business.LocationActivity());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.ProfileLocationRemove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.BusinessLocationClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.BusinessLocationClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16324,7 +16404,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }, false, false, getResourceProvider()).create());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.Remove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.BirthdayClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.BirthdayClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {
@@ -16358,7 +16438,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 presentFragment(new UserInfoActivity());
             });
             itemOptions.add(R.drawable.msg_delete, getString(R.string.Remove), true, () -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getParentActivity());
                 builder.setTitle(LocaleController.getString(R.string.ProfileChannelClearTitle));
                 builder.setMessage(LocaleController.getString(R.string.ProfileChannelClearMessage));
                 builder.setPositiveButton(LocaleController.getString(R.string.Remove), (di, w) -> {

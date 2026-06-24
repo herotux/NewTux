@@ -326,6 +326,7 @@ public class EditTextBoldCursor extends EditTextEffects {
 
     @SuppressLint("PrivateApi")
     private void init() {
+        setTypeface(org.telegram.messenger.AndroidUtilities.regular());
         linePaint = new Paint();
         activeLinePaint = new Paint();
         errorPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);

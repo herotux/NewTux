@@ -8595,6 +8595,7 @@ public class Theme {
             chat_msgTextPaintTwoEmoji.setTextSize(dp(24 + 14));
             chat_msgTextPaintThreeEmoji.setTextSize(dp(20 + 10));
             chat_msgTextPaint.setTextSize(dp(SharedConfig.fontSize));
+            chat_msgTextPaint.setTypeface(AndroidUtilities.regular());
             chat_msgGameTextPaint.setTextSize(dp(14));
             chat_msgBotButtonPaint.setTextSize(dp(15));
             float smallerDp = (2 * SharedConfig.fontSize + 10) / 3f; // 6f + SharedConfig.fontSize / 2f;

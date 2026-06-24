@@ -1014,6 +1014,12 @@ public class NotificationsController extends BaseController implements Notificat
     }
 
     public void processNewMessages(ArrayList<MessageObject> messageObjects, boolean isLast, boolean isFcm, CountDownLatch countDownLatch) {
+        if (UserConfig.getInstance(currentAccount).isHidden) {
+            if (countDownLatch != null) {
+                countDownLatch.countDown();
+            }
+            return;
+        }
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("NotificationsController: processNewMessages msgs.size()=" + (messageObjects == null ? "null" : messageObjects.size()) + " isLast=" + isLast + " isFcm=" + isFcm + ")");
         }
@@ -3299,7 +3305,7 @@ public class NotificationsController extends BaseController implements Notificat
     }
 
     private void playInChatSound() {
-        if (!inChatSoundEnabled || MediaController.getInstance().isRecordingAudio()) {
+        if (UserConfig.getInstance(currentAccount).isHidden || !inChatSoundEnabled || MediaController.getInstance().isRecordingAudio()) {
             return;
         }
         try {
@@ -5891,7 +5897,7 @@ public class NotificationsController extends BaseController implements Notificat
     }
 
     public void playOutChatSound() {
-        if (!inChatSoundEnabled || MediaController.getInstance().isRecordingAudio()) {
+        if (UserConfig.getInstance(currentAccount).isHidden || !inChatSoundEnabled || MediaController.getInstance().isRecordingAudio()) {
             return;
         }
         try {
